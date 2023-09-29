@@ -9,7 +9,7 @@ export const signup = async (req, res, next) => {
     const hashpassword = await bcrypt.hash(req.body.password, 8);
     const user = new User({ ...req.body, password: hashpassword });
     const saveduser = await user.save();
-    const accesToken = jwt.sign({ id: saveduser._id }, process.env.JWT);
+    const accesToken = jwt.sign({ id: saveduser._id }, "ABCDEF");
     const { password, ...others } = saveduser._doc; // This is to remove password from our response
 
     res
@@ -31,7 +31,7 @@ export const signin = async (req, res, next) => {
     const result = await bcrypt.compare(req.body.password, user.password);
     if (!result) return next(createError(400, "Wrong Password"));
 
-    const accesToken = jwt.sign({ id: user._id }, process.env.JWT);
+    const accesToken = jwt.sign({ id: user._id }, "ABCDEF");
     const { password, ...others } = user._doc; // This is to remove password from our response
 
     res
@@ -48,7 +48,7 @@ export const google = async (req, res, next) => {
   try {
     const user = await User.findOne({ email: req.body.email });
     if (user) {
-      const accesToken = jwt.sign({ id: user._id }, process.env.JWT);
+      const accesToken = jwt.sign({ id: user._id }, "ABCDEF");
       res
         .cookie("access_token", accesToken, { httpOnly: true })
         .status(200)
@@ -56,7 +56,7 @@ export const google = async (req, res, next) => {
     } else {
       const newuser = new User({ ...req.body, fromGoogle: true });
       const saveduser = await newuser.save();
-      const accesToken = jwt.sign({ id: saveduser._id }, process.env.JWT);
+      const accesToken = jwt.sign({ id: saveduser._id }, "ABCDEF");
       res
         .cookie("access_token", accesToken, { httpOnly: true })
         .status(200)
