@@ -21,18 +21,7 @@ mongoose
   });
 
 //middleware
-app.use(express.static(path.join(__dirname, "/client")));
 
-app.get("*", (req, res) => {
-  res.sendFile(path.join(__dirname, "/client/build", "index.html"));
-});
-app.use(
-  cors({
-    origin:
-      "https://app.netlify.com/sites/jade-pithivier-700ac2/deploys/65172aaa30cc630008bb4279",
-    credentials: true,
-  })
-);
 app.use(express.json());
 app.use(cookieParser());
 //routes
