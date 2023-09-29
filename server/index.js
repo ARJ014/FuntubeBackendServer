@@ -10,7 +10,9 @@ import cors from "cors";
 
 dotenv.config();
 const app = express();
-
+app.use(
+  cors({ origin: "https://frontfuntube.netlify.app/", credentials: true })
+);
 mongoose
   .connect(
     "mongodb+srv://arjun:arjun@cluster0.j0l6twi.mongodb.net/?retryWrites=true&w=majority"
