@@ -11,7 +11,7 @@ import cors from "cors";
 dotenv.config();
 const app = express();
 app.use(
-  cors({ origin: ["http://localhost:3000","https://frontfuntube.netlify.app"], credentials: true })
+  cors({ origin: "https://frontfuntube.netlify.app", credentials: true })
 );
 mongoose
   .connect(
