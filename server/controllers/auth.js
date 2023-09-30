@@ -3,13 +3,14 @@ import User from "../models/User.js";
 import { createError } from "../error.js";
 import jwt from "jsonwebtoken";
 
+let jwtSecretKey = process.env.JWT;
 //Signing Up the user
 export const signup = async (req, res, next) => {
   try {
     const hashpassword = await bcrypt.hash(req.body.password, 8);
     const user = new User({ ...req.body, password: hashpassword });
     const saveduser = await user.save();
-    const accesToken = jwt.sign({ id: saveduser._id }, "ABCDEF");
+    const accesToken = jwt.sign({ id: saveduser._id }, jwtSecretKey);
     const { password, ...others } = saveduser._doc; // This is to remove password from our response
 
     res
@@ -31,7 +32,7 @@ export const signin = async (req, res, next) => {
     const result = await bcrypt.compare(req.body.password, user.password);
     if (!result) return next(createError(400, "Wrong Password"));
 
-    const accesToken = jwt.sign({ id: user._id }, "ABCDEF");
+    const accesToken = jwt.sign({ id: user._id }, jwtSecretKey);
     const { password, ...others } = user._doc; // This is to remove password from our response
 
     res
@@ -48,7 +49,7 @@ export const google = async (req, res, next) => {
   try {
     const user = await User.findOne({ email: req.body.email });
     if (user) {
-      const accesToken = jwt.sign({ id: user._id }, "ABCDEF");
+      const accesToken = jwt.sign({ id: user._id }, jwtSecretKey);
       res
         .cookie("access_token", accesToken, { httpOnly: true })
         .status(200)
@@ -56,7 +57,7 @@ export const google = async (req, res, next) => {
     } else {
       const newuser = new User({ ...req.body, fromGoogle: true });
       const saveduser = await newuser.save();
-      const accesToken = jwt.sign({ id: saveduser._id }, "ABCDEF");
+      const accesToken = jwt.sign({ id: saveduser._id }, jwtSecretKey);
       res
         .cookie("access_token", accesToken, { httpOnly: true })
         .status(200)
